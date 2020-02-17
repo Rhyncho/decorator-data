@@ -81,13 +81,12 @@ export function Data(originalC: any) {
 
     }
 
-    delete c.__MappingData__;
-
     return c;
 
   };
 
   newConstructor.prototype = originalC.prototype;
+  newConstructor.prototype.constructor = newConstructor;
 
   return newConstructor;
 

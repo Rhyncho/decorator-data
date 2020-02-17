@@ -57,10 +57,10 @@ function Data(originalC) {
             var mappingConfig = mappingList[key];
             c[key] = initValue(mappingConfig, key, inputData[mappingConfig.mappingKey]);
         }
-        delete c.__MappingData__;
         return c;
     };
     newConstructor.prototype = originalC.prototype;
+    newConstructor.prototype.constructor = newConstructor;
     return newConstructor;
 }
 exports.Data = Data;
