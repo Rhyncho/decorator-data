@@ -1,4 +1,11 @@
 "use strict";
+var __spreadArrays = (this && this.__spreadArrays) || function () {
+    for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
+    for (var r = Array(s), k = 0, i = 0; i < il; i++)
+        for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
+            r[k] = a[j];
+    return r;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 function initValue(mapConfig, originalKey, dataValue) {
     var defaultValue = mapConfig.typeRef;
@@ -32,6 +39,31 @@ function initValue(mapConfig, originalKey, dataValue) {
     // object
     return new defaultValue.constructor(dataValue);
 }
+function parseToData(value) {
+    if (value.__MappingData__ && typeof value.toData === 'function') {
+        return value.toData();
+    }
+    if (Array.isArray(value)) {
+        return value.map(function (itr) {
+            return parseToData(itr);
+        });
+    }
+    if (typeof value === 'object') {
+        return JSON.parse(JSON.stringify(value));
+    }
+    return value;
+}
+function toData() {
+    var mappingList = this.__MappingData__;
+    var keys = Object.keys(mappingList);
+    var output = {};
+    for (var _i = 0, keys_1 = keys; _i < keys_1.length; _i++) {
+        var key = keys_1[_i];
+        var mappingConfig = mappingList[key];
+        output[mappingConfig.mappingKey] = parseToData(this[key]);
+    }
+    return output;
+}
 function Data(originalC) {
     // save a reference to the original constructor
     var newConstructor = function () {
@@ -43,7 +75,7 @@ function Data(originalC) {
             console.warn("The arguments of @Data model are not one. If the mapping data is not the first args, the program will be something wrong.");
         }
         var inputData = args[0];
-        var c = new (originalC.bind.apply(originalC, [void 0].concat(args)))();
+        var c = new (originalC.bind.apply(originalC, __spreadArrays([void 0], args)))();
         var mappingList = c.__MappingData__;
         var keys = [];
         try {
@@ -52,11 +84,12 @@ function Data(originalC) {
         catch (e) {
             throw Error("There is no mapping data in " + originalC.name + ". Please remove @Data on class " + originalC.name + " or add @Mapping on its properties.");
         }
-        for (var _a = 0, keys_1 = keys; _a < keys_1.length; _a++) {
-            var key = keys_1[_a];
+        for (var _a = 0, keys_2 = keys; _a < keys_2.length; _a++) {
+            var key = keys_2[_a];
             var mappingConfig = mappingList[key];
             c[key] = initValue(mappingConfig, key, inputData[mappingConfig.mappingKey]);
         }
+        c.toData = toData.bind(c);
         return c;
     };
     newConstructor.prototype = originalC.prototype;

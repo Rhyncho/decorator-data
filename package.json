@@ -3,6 +3,9 @@
   "version": "0.0.3",
   "description": "decorator-data",
   "main": "./dist/index.js",
+  "files": [
+    "/dist"
+  ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

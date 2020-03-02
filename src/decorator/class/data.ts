@@ -1,6 +1,5 @@
 import { MappingVI } from '../../interface/mapping-vi.interface';
 
-
 function initValue(
   mapConfig: MappingVI,  
   originalKey: string, 
@@ -50,6 +49,37 @@ function initValue(
 
 }
 
+function parseToData(value: any) {
+
+  if (value.__MappingData__ && typeof value.toData === 'function') {
+    return value.toData();
+  }
+
+  if (Array.isArray(value)) {
+    return value.map((itr) => {
+      return parseToData(itr);
+    })
+  }
+
+  if (typeof value === 'object') {
+    return JSON.parse(JSON.stringify(value));
+  }
+
+  return value;
+
+}
+
+function toData() {
+  const mappingList = this.__MappingData__;
+  let keys = Object.keys(mappingList);
+  let output = {};
+  for (const key of keys) {
+    const mappingConfig: MappingVI = mappingList[key];
+    output[mappingConfig.mappingKey] = parseToData(this[key]);
+  }
+  return output;
+}
+
 export function Data(originalC: any) {
 
   // save a reference to the original constructor
@@ -80,6 +110,8 @@ export function Data(originalC: any) {
       );
 
     }
+
+    c.toData = toData.bind(c);
 
     return c;
 
