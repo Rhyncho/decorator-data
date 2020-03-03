@@ -7,11 +7,10 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
     return r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-function initValue(mapConfig, originalKey, dataValue) {
-    var defaultValue = mapConfig.typeRef;
+function initValue(defaultValue, mapConfig, originalKey, dataValue) {
     if (dataValue === null || dataValue === undefined) {
         if (mapConfig.nullable) {
-            return defaultValue;
+            return dataValue;
         }
         if (Array.isArray(defaultValue)) {
             return [];
@@ -31,10 +30,10 @@ function initValue(mapConfig, originalKey, dataValue) {
         if (!typeRef_1) {
             throw Error("The default value type of " + originalKey + " is Array, it must pass at least 1 element for type mapping.");
         }
-        if (typeof typeRef_1 !== 'object') {
-            throw Error("We only support object[. The other arrays -- string[], number[] ... etc, are not support. Sorry for inconvenience.");
+        if (typeof typeRef_1 === 'object') {
+            return dataValue.map(function (itr) { return new typeRef_1.constructor(itr); });
         }
-        return dataValue.map(function (itr) { return new typeRef_1.constructor(itr); });
+        return dataValue.map(function (itr) { return itr; });
     }
     // object
     return new defaultValue.constructor(dataValue);
@@ -87,7 +86,7 @@ function Data(originalC) {
         for (var _a = 0, keys_2 = keys; _a < keys_2.length; _a++) {
             var key = keys_2[_a];
             var mappingConfig = mappingList[key];
-            c[key] = initValue(mappingConfig, key, inputData[mappingConfig.mappingKey]);
+            c[key] = initValue(c[key], mappingConfig, key, inputData[mappingConfig.mappingKey]);
         }
         c.toData = toData.bind(c);
         return c;

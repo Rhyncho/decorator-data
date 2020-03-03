@@ -1,10 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 function Mapping(userSetting) {
-    if (userSetting.typeRef === null || userSetting.typeRef === undefined) {
-        throw Error('typeRef do not accept null or undefined.');
-    }
     return function (targetClassPrototype, propertyKey) {
+        if (!userSetting) {
+            userSetting = {};
+        }
         // If user does not set mappingKey, use original key to map.
         userSetting.mappingKey = userSetting.mappingKey || propertyKey;
         userSetting.nullable = userSetting.nullable || false;
