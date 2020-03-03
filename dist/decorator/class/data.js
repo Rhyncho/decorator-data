@@ -38,31 +38,6 @@ function initValue(defaultValue, mapConfig, originalKey, dataValue) {
     // object
     return new defaultValue.constructor(dataValue);
 }
-function parseToData(value) {
-    if (value.__MappingData__ && typeof value.toData === 'function') {
-        return value.toData();
-    }
-    if (Array.isArray(value)) {
-        return value.map(function (itr) {
-            return parseToData(itr);
-        });
-    }
-    if (typeof value === 'object') {
-        return JSON.parse(JSON.stringify(value));
-    }
-    return value;
-}
-function toData() {
-    var mappingList = this.__MappingData__;
-    var keys = Object.keys(mappingList);
-    var output = {};
-    for (var _i = 0, keys_1 = keys; _i < keys_1.length; _i++) {
-        var key = keys_1[_i];
-        var mappingConfig = mappingList[key];
-        output[mappingConfig.mappingKey] = parseToData(this[key]);
-    }
-    return output;
-}
 function Data(originalC) {
     // save a reference to the original constructor
     var newConstructor = function () {
@@ -83,12 +58,11 @@ function Data(originalC) {
         catch (e) {
             throw Error("There is no mapping data in " + originalC.name + ". Please remove @Data on class " + originalC.name + " or add @Mapping on its properties.");
         }
-        for (var _a = 0, keys_2 = keys; _a < keys_2.length; _a++) {
-            var key = keys_2[_a];
+        for (var _a = 0, keys_1 = keys; _a < keys_1.length; _a++) {
+            var key = keys_1[_a];
             var mappingConfig = mappingList[key];
             c[key] = initValue(c[key], mappingConfig, key, inputData[mappingConfig.mappingKey]);
         }
-        c.toData = toData.bind(c);
         return c;
     };
     newConstructor.prototype = originalC.prototype;
