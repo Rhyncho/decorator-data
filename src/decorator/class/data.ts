@@ -9,7 +9,7 @@ function initValue(
   if (dataValue === null || dataValue === undefined) {
 
     if (mapConfig.nullable) {
-      return defaultValue;
+      return dataValue;
     }
 
     if (Array.isArray(defaultValue)) {
