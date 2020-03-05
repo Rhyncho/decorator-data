@@ -2,8 +2,8 @@ import { MappingVI } from '../interface/mapping-vi.interface';
 
 function parseToData(value: any) {
 
-  if (value.__MappingData__ && typeof value.toData === 'function') {
-    return value.toData();
+  if (value.__MappingData__) {
+    return toData(value);
   }
 
   if (Array.isArray(value)) {

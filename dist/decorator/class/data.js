@@ -1,17 +1,10 @@
 "use strict";
-var __spreadArrays = (this && this.__spreadArrays) || function () {
-    for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
-    for (var r = Array(s), k = 0, i = 0; i < il; i++)
-        for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
-            r[k] = a[j];
-    return r;
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 function initValue(mapConfig, originalKey, dataValue) {
     var defaultValue = mapConfig.typeRef;
     if (dataValue === null || dataValue === undefined) {
         if (mapConfig.nullable) {
-            return defaultValue;
+            return dataValue;
         }
         if (Array.isArray(defaultValue)) {
             return [];
@@ -50,7 +43,7 @@ function Data(originalC) {
             console.warn("The arguments of @Data model are not one. If the mapping data is not the first args, the program will be something wrong.");
         }
         var inputData = args[0];
-        var c = new (originalC.bind.apply(originalC, __spreadArrays([void 0], args)))();
+        var c = new (originalC.bind.apply(originalC, [void 0].concat(args)))();
         var mappingList = c.__MappingData__;
         var keys = [];
         try {

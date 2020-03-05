@@ -13,4 +13,12 @@ export interface MappingVI {
      * @memberof MappingVI
      */
     nullable?: boolean;
+    /**
+     * Data type reference.
+     * And it also the default value when mapped data is null or undefined.
+     *
+     * @type {*}
+     * @memberof MappingVI
+     */
+    typeRef: any;
 }

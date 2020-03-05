@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 function parseToData(value) {
-    if (value.__MappingData__ && typeof value.toData === 'function') {
-        return value.toData();
+    if (value.__MappingData__) {
+        return toData(value);
     }
     if (Array.isArray(value)) {
         return value.map(function (itr) {
