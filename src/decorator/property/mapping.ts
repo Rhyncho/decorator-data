@@ -1,12 +1,12 @@
 import { MappingVI } from '../../interface/mapping-vi.interface';
 
-export function Mapping(userSetting?: MappingVI) {
+export function Mapping(userSetting: MappingVI) {
+
+  if (userSetting.typeRef === null || userSetting.typeRef === undefined) {
+    throw Error('typeRef do not accept null or undefined.');
+  }
 
   return (targetClassPrototype, propertyKey) => {
-
-    if (!userSetting) {
-      userSetting = {};
-    }
 
     // If user does not set mappingKey, use original key to map.
     userSetting.mappingKey = userSetting.mappingKey || propertyKey;

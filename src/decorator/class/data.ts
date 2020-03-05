@@ -1,11 +1,11 @@
 import { MappingVI } from '../../interface/mapping-vi.interface';
 
 function initValue(
-  defaultValue: any,
   mapConfig: MappingVI,  
   originalKey: string, 
   dataValue
 ) {
+  const defaultValue = mapConfig.typeRef;
   if (dataValue === null || dataValue === undefined) {
 
     if (mapConfig.nullable) {
@@ -36,12 +36,11 @@ function initValue(
     if (!typeRef) {
       throw Error(`The default value type of ${originalKey} is Array, it must pass at least 1 element for type mapping.`);
     }
-
-    if (typeof typeRef === 'object') {
-      return dataValue.map(itr => new typeRef.constructor(itr));
+    if (typeof typeRef !== 'object') {
+      throw Error(`We only support object[. The other arrays -- string[], number[] ... etc, are not support. Sorry for inconvenience.`);
     }
 
-    return dataValue.map(itr => itr);
+    return dataValue.map(itr => new typeRef.constructor(itr));
 
   }
 
@@ -74,7 +73,6 @@ export function Data(originalC: any) {
       
       const mappingConfig: MappingVI = mappingList[key];
       c[key] = initValue(
-        c[key],
         mappingConfig, 
         key, 
         inputData[mappingConfig.mappingKey]
