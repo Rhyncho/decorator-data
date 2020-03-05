@@ -1,6 +1,6 @@
 {
   "name": "decorator-data",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "decorator-data",
   "main": "./dist/index.js",
   "files": [
