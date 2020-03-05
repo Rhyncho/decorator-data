@@ -20,7 +20,7 @@ function parseToData(value: any) {
 
 }
 
-export function toData(data: any): object {
+export function toData(data: any): any {
   const mappingList = data.__MappingData__
   if (mappingList) {
     let keys = Object.keys(mappingList);

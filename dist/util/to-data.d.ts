@@ -1,1 +1,1 @@
-export declare function toData(data: any): object;
+export declare function toData(data: any): any;
